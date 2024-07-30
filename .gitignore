@@ -1,5 +1,37 @@
-*.class
-*.log
+# SBT specific files
+target/
+project/target/
+project/project/
+.cache/
+lib_managed/
+src_managed/
+.history
+.cache-main
+.scala_dependencies
+dist/
+boot/
+logs/
+classes/
+test-classes/
+dependency-reduced-pom.xml
+site/
+.cache/
+.sts4-cache/
+.ensime_cache/
+.idea/
+*.iml
+*.ipr
+*.iws
+*.swp
+.DS_Store
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
+# Metals specific files
+.metals/
+.metals/
+.bloop/
+
+# BSP specific files
+.bsp/
+
+# Bloop specific files
+.bloop/
