@@ -1,5 +1,8 @@
 package graphTransformer
 
-object Main extends App {
-  println("Hello, Scala SBT project!")
+
+object Main {
+  def main(args: Array[String]): Unit = {
+    println("Hello, world!")
+  }
 }
