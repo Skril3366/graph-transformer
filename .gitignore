@@ -27,7 +27,7 @@ site/
 
 # Metals specific files
 .metals/
-.metals/
+project/metals.sbt
 .bloop/
 
 # BSP specific files
