@@ -21,24 +21,24 @@ case class DirectedGraph[N, E](
       from: Node[N2],
       to: Node[N2],
       value: E2
-  ): EdgeType[N2, E2] = DirectedEdge(from, to, value)
+  ): DirectedEdge[N2, E2] = DirectedEdge(from, to, value)
 
   override def edgesCommonNode(
       edge1: DirectedEdge[N, E],
       edge2: DirectedEdge[N, E]
-  ): Option[ThisNodeType] =
+  ): Option[Node[N]] =
     if edge1.to == edge2.from then Some(edge1.to) else None
 
-  override lazy val adjacencyMatrix
-      : Map[ThisNodeType, Map[ThisNodeType, Set[ThisEdgeType]]] =
-    edges
-      .map(e => (e.from, e.to, e))
-      .groupBy(_._1)
-      .map((k, v) =>
-        (
-          k,
-          v.groupBy(_._2).map((k, v) => (k, v.map(_._3))).withDefault(Map.empty)
+  override lazy val adjacencyMatrix: AdjacencyMatrix[N, E, DirectedEdge] =
+    new AdjacencyMatrix(
+      edges
+        .map(e => (e.from, e.to, e))
+        .groupBy(_._1)
+        .map((k, v) =>
+          (
+            k,
+            v.groupBy(_._2).map((k, v) => (k, v.map(_._3)))
+          )
         )
-      )
-      .withDefault(Map.empty)
+    )
 }
