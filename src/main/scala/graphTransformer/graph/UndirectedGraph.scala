@@ -24,7 +24,7 @@ case class UndirectedGraph[N, E](
   ): Option[Node[N]] = {
     val intersection = edge1.nodes.toList.intersect(edge2.nodes.toList)
 
-    if intersection.length == 1 then Some(intersection.head) else None
+    if intersection.length == 1 then intersection.headOption else None
   }
 
   override lazy val adjacencyMatrix: AdjacencyMatrix[N, E, UndirectedEdge] =

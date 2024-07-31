@@ -1,6 +1,7 @@
 package graphTransformer.graph
 
 import scala.annotation.tailrec
+import cats.syntax.option.*
 
 /** This is an implementation of directed graph which may contain multi-edges
   * and self-loops. The graph is immutable and all operations return a new
@@ -27,7 +28,7 @@ case class DirectedGraph[N, E](
       edge1: DirectedEdge[N, E],
       edge2: DirectedEdge[N, E]
   ): Option[Node[N]] =
-    if edge1.to == edge2.from then Some(edge1.to) else None
+    if edge1.to == edge2.from then edge1.to.some else None
 
   override lazy val adjacencyMatrix: AdjacencyMatrix[N, E, DirectedEdge] =
     new AdjacencyMatrix(

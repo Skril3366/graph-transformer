@@ -27,11 +27,9 @@ case class UndirectedEdge[N, E](
   override def equals(obj: Any): Boolean = obj match {
 // NOTE: unchecked is used to suppress warning
     case that: UndirectedEdge[N, E] @unchecked =>
-      this.value == that.value &&
-      (
-        (this.nodeOne == that.nodeOne && this.nodeTwo == that.nodeTwo) ||
-          (this.nodeOne == that.nodeTwo && this.nodeTwo == that.nodeOne)
-      )
+      this.value == that.value && this.nodes.toList
+        .diff(that.nodes.toList)
+        .isEmpty
     case _ => false
   }
 }
@@ -98,17 +96,15 @@ trait Graph[N, E, EE[N, E] <: Edge[N, E, EE], GG[N, E] <: Graph[N, E, EE, GG]] {
       es: EE[N, E]*
   ): Either[NoSuchNodesInGraph[N], GG[N, E]] =
     es.flatMap(e => e.nodes.toList).filterNot(nodes.contains) match {
-      case l if l.length > 0 =>
-        Left(NoSuchNodesInGraph(l))
-      case l =>
-        Right(make(nodes, edges ++ es))
+      case l if l.nonEmpty => Left(NoSuchNodesInGraph(l))
+      case l               => Right(make(nodes, edges ++ es))
     }
 
   /** Removes nodes from the graph and all the edges that are connected to them
     */
   def removeNodes(ns: Node[N]*): GG[N, E] = {
     val edgesToRemove =
-      edges.filter(e => e.nodes.toList.intersect(ns).length == 0).toSet
+      edges.filter(e => e.nodes.toList.intersect(ns).isEmpty).toSet
     make(nodes -- ns.toSet, edges -- edgesToRemove)
   }
 
@@ -176,8 +172,8 @@ trait Graph[N, E, EE[N, E] <: Edge[N, E, EE], GG[N, E] <: Graph[N, E, EE, GG]] {
   }
 
   /** Collects all reachable nodes from the given node using BFS algorithm
-   *
-   *  NOTE: returns also returns the starting node
+    *
+    * NOTE: returns also returns the starting node
     */
   def reachableNodes(node: Node[N]): Set[Node[N]] =
     reachableEdges(node).flatMap(n => n.nodes.toList) + node
