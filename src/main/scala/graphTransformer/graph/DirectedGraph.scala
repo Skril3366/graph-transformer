@@ -3,10 +3,10 @@ package graphTransformer.graph
 import scala.annotation.tailrec
 import cats.syntax.option.*
 
-/** This is an implementation of directed graph which may contain multi-edges
-  * and self-loops. The graph is immutable and all operations return a new
-  * graph.
-  */
+/**
+ * This is an implementation of directed graph which may contain multi-edges and self-loops. The graph is immutable and
+ * all operations return a new graph.
+ */
 case class DirectedGraph[N, E](
     nodes: Set[Node[N]],
     edges: Set[DirectedEdge[N, E]]
