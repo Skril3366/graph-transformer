@@ -25,9 +25,7 @@ lazy val graphTransformer = (project in file("."))
       // tapir
       "com.softwaremill.sttp.tapir" %% "tapir-core"             % tapirVersion,
       "com.softwaremill.sttp.tapir" %% "tapir-vertx-server-zio" % tapirVersion,
-      // "com.softwaremill.sttp.tapir" %% "tapir-json-circe" % "0.18.0",
-      // "com.softwaremill.sttp.tapir" %% "tapir-zio" % "0.18.0",
-      // "com.softwaremill.sttp.tapir" %% "tapir-openapi-docs" % "0.18.0",
+      "com.softwaremill.sttp.tapir" %% "tapir-json-circe"       % tapirVersion,
       // test
       "org.scalatest" %% "scalatest" % "3.2.19" % Test,
     )
