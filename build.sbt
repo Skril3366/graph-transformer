@@ -6,6 +6,7 @@ val catsVersion  = "2.12.0"
 val zioVersion   = "2.1.6"
 val circeVersion = "0.14.9"
 val tapirVersion = "1.11.0"
+val scalatestVersion = "3.2.9"
 
 lazy val graphTransformer = (project in file("."))
   .settings(
@@ -27,6 +28,7 @@ lazy val graphTransformer = (project in file("."))
       "com.softwaremill.sttp.tapir" %% "tapir-core"             % tapirVersion,
       "com.softwaremill.sttp.tapir" %% "tapir-vertx-server-zio" % tapirVersion,
       "com.softwaremill.sttp.tapir" %% "tapir-json-circe"       % tapirVersion,
+      "com.softwaremill.sttp.tapir" %% "tapir-files"            % tapirVersion,
       // test
       "org.scalatest" %% "scalatest" % "3.2.19" % Test,
     )
