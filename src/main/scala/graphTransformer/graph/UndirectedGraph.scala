@@ -30,9 +30,7 @@ case class UndirectedGraph[N, E](
   override lazy val adjacencyMatrix: AdjacencyMatrix[N, E, UndirectedEdge] =
     new AdjacencyMatrix(
       edges
-        .flatMap(e =>
-          List((e.nodeOne, e.nodeTwo, e), (e.nodeTwo, e.nodeOne, e))
-        )
+        .flatMap(e => List((e.nodeOne, e.nodeTwo, e), (e.nodeTwo, e.nodeOne, e)))
         .groupBy(_._1)
         .map((k, v) =>
           (

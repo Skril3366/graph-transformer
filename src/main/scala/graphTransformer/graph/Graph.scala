@@ -39,9 +39,9 @@ case class DirectedEdge[N, E](
     to: Node[N],
     value: E
 ) extends Edge[N, E, DirectedEdge] {
-  def nodes = (from, to)
+  def nodes                  = (from, to)
   def mapNodes[T](f: N => T) = this.copy(from.map(f), to.map(f), value)
-  def map[T](f: E => T) = this.copy(value = f(value))
+  def map[T](f: E => T)      = this.copy(value = f(value))
 }
 
 trait Graph[N, E, EE[N, E] <: Edge[N, E, EE], GG[N, E] <: Graph[N, E, EE, GG]] {
@@ -59,8 +59,9 @@ trait Graph[N, E, EE[N, E] <: Edge[N, E, EE], GG[N, E] <: Graph[N, E, EE, GG]] {
       value: E2
   ): EE[N2, E2]
 
-  /** Returns common node between two edges if exists, used in other functions
-    */
+  /**
+   * Returns common node between two edges if exists, used in other functions
+   */
   def edgesCommonNode(
       edge1: EE[N, E],
       edge2: EE[N, E]
@@ -68,16 +69,16 @@ trait Graph[N, E, EE[N, E] <: Edge[N, E, EE], GG[N, E] <: Graph[N, E, EE, GG]] {
 
   lazy val adjacencyMatrix: AdjacencyMatrix[N, E, EE]
 
-  /** A graph where edges become nodes and two nodes are connected if they had a
-    * node in between
-    *
-    * refer to https://en.wikipedia.org/wiki/Line_graph for more info
-    */
+  /**
+   * A graph where edges become nodes and two nodes are connected if they had a node in between
+   *
+   * refer to https://en.wikipedia.org/wiki/Line_graph for more info
+   */
   lazy val lineGraph: UndirectedGraph[E, N] = {
     val newNodes = edges.map(e => Node(e.value))
     val newEdges = for {
-      edge1 <- edges
-      edge2 <- edges
+      edge1            <- edges
+      edge2            <- edges
       intersectionNode <- edgesCommonNode(edge1, edge2).toSet
     } yield UndirectedEdge(
       Node(edge1.value),
@@ -89,9 +90,10 @@ trait Graph[N, E, EE[N, E] <: Edge[N, E, EE], GG[N, E] <: Graph[N, E, EE, GG]] {
 
   def addNodes(ns: Node[N]*): GG[N, E] = make(nodes ++ ns, edges)
 
-  /** Adds edges to the graph if all the nodes in the edges are present,
-    * otherwise returns an error with the list of nodes that are not present
-    */
+  /**
+   * Adds edges to the graph if all the nodes in the edges are present, otherwise returns an error with the list of
+   * nodes that are not present
+   */
   def addEdges(
       es: EE[N, E]*
   ): Either[NoSuchNodesInGraph[N], GG[N, E]] =
@@ -100,8 +102,9 @@ trait Graph[N, E, EE[N, E] <: Edge[N, E, EE], GG[N, E] <: Graph[N, E, EE, GG]] {
       case l               => Right(make(nodes, edges ++ es))
     }
 
-  /** Removes nodes from the graph and all the edges that are connected to them
-    */
+  /**
+   * Removes nodes from the graph and all the edges that are connected to them
+   */
   def removeNodes(ns: Node[N]*): GG[N, E] = {
     val edgesToRemove =
       edges.filter(e => e.nodes.toList.intersect(ns).isEmpty).toSet
@@ -123,15 +126,14 @@ trait Graph[N, E, EE[N, E] <: Edge[N, E, EE], GG[N, E] <: Graph[N, E, EE, GG]] {
   def mapEdges[E2](f: E => E2): GG[N, E2] =
     make(nodes, edges.map(_.map(f)))
 
-  /** Given a function that creates a subgraph out of a graph's node, creates
-    * replaces all nodes with those subgraphs.
-    *
-    * Nodes from 2 subgraphs are connected if and only if there was an edge
-    * between the original corresponding nodes
-    *
-    * NOTE: there's no similar function for flatMapping edges as it requires
-    * also function E => E1 together with E => DirectedGraph[N, E2]
-    */
+  /**
+   * Given a function that creates a subgraph out of a graph's node, creates replaces all nodes with those subgraphs.
+   *
+   * Nodes from 2 subgraphs are connected if and only if there was an edge between the original corresponding nodes
+   *
+   * NOTE: there's no similar function for flatMapping edges as it requires also function E => E1 together with E =>
+   * DirectedGraph[N, E2]
+   */
   def flatMapNodes[N2](
       f: N => GG[N2, E]
   ): GG[N2, E] = {
@@ -142,10 +144,10 @@ trait Graph[N, E, EE[N, E] <: Edge[N, E, EE], GG[N, E] <: Graph[N, E, EE, GG]] {
 
     val additionalEdges = for {
       edge <- edges
-      subgraphNodes = (n: Node[N]) => newGraphs.get(n).toSet.flatMap(_.nodes)
+      subgraphNodes      = (n: Node[N]) => newGraphs.get(n).toSet.flatMap(_.nodes)
       (fromNode, toNode) = edge.nodes
       from <- subgraphNodes(fromNode)
-      to <- subgraphNodes(toNode)
+      to   <- subgraphNodes(toNode)
     } yield makeEdge(from, to, edge.value)
 
     make(newNodes, newEdges ++ additionalEdges)
@@ -162,19 +164,19 @@ trait Graph[N, E, EE[N, E] <: Edge[N, E, EE], GG[N, E] <: Graph[N, E, EE, GG]] {
         collected: Set[EE[N, E]]
     ): Set[EE[N, E]] = toVisit match {
       case Nil => collected
-      case head :: tail => {
+      case head :: tail =>
         val newNodes = adjacencyMatrix.getToNodes(head)
         val newEdges = adjacencyMatrix.getToEdges(head)
         visit(tail ++ newNodes, visited + head, collected ++ newEdges)
-      }
     }
     visit(List(node), Set.empty, Set.empty)
   }
 
-  /** Collects all reachable nodes from the given node using BFS algorithm
-    *
-    * NOTE: returns also returns the starting node
-    */
+  /**
+   * Collects all reachable nodes from the given node using BFS algorithm
+   *
+   * NOTE: returns also returns the starting node
+   */
   def reachableNodes(node: Node[N]): Set[Node[N]] =
     reachableEdges(node).flatMap(n => n.nodes.toList) + node
 }
