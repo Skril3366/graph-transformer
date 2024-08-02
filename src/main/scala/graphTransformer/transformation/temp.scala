@@ -1,11 +1,5 @@
 package graphTransformer.transformation
 
-import scala.deriving.Mirror
-import co.blocke.scala_reflection.RType
-import co.blocke.scala_reflection.RTypeRef
-import dotty.tools.dotc.core.Types.Type
-// import scala.reflect.ClassTag
-
 class MyData[T](value: T) extends TData[T] {
   override def TypeName: String = "aboba"
 }
