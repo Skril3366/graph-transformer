@@ -6,16 +6,17 @@ import zio.ZIO
 
 /// Special case of transfomation for merging multiple inputs into one output.
 /// Allow to compose multiple transformations branches into a single one.
-trait TransformationPoly[F[_], I <: TData[I], O <: TData[O]] extends Transformation[F, I, O] {
-  def apply(inputs: I*): F[O]
+abstract class TransformationPoly[F[_], I](element_example: I)
+    extends Transformation[F, I, I](element_example, element_example) {
+  def apply(inputs: I*): F[I]
 }
 
-trait TransformationPolyPure[I <: TData[I], O <: TData[O]] extends TransformationPoly[UIO, I, O] {
-  def apply(inputs: I*): UIO[O] = ZIO.succeed(pureApply(inputs))
+abstract class TransformationPolyPure[I](element_example: I) extends TransformationPoly[UIO, I](element_example) {
+  def apply(inputs: I*): UIO[I] = ZIO.succeed(pureApply(inputs))
 
-  def pureApply(inputs: Seq[I]): O
+  def pureApply(inputs: Seq[I]): I
 }
 
-trait TransformationPolyIO[I <: TData[I], O <: TData[O]] extends TransformationPoly[Task, I, O] {
-  def apply(inputs: I*): Task[O]
+abstract class TransformationPolyIO[I](element_example: I) extends TransformationPoly[Task, I](element_example: I) {
+  def apply(inputs: I*): Task[I]
 }

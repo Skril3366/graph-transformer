@@ -8,13 +8,10 @@ import graphTransformer.graph.DirectedGraph
 import graphTransformer.graph.Node
 import graphTransformer.graph.DirectedEdge
 
-trait TData[T] {
-  // Unique identifier for the data type
-  def TypeName: String
-}
-
-trait Transformation[F[_], I <: TData[I], O <: TData[O]] {
+abstract case class Transformation[F[_], I, O](input_example: I, output_example: O) {
   def name: String
+
+  override def toString: String = "Transformation_" + name
 }
 
 type TransformationGraph = DirectedGraph[Transformation[?, ?, ?], Unit]
@@ -28,7 +25,11 @@ def transitionGraph[T <: Transformation[?, ?, ?]](
     n1 <- nodes
     n2 <- nodes
     if n1 != n2
+    // if n1.value.output_example.getClass().isInstance(n2.value.input_example.getClass())
+    if n1.value.output_example == n2.value.input_example
   } yield DirectedEdge(n1, n2, ())
+
+  println(edges)
 
   // DirectedGraph(nodes, edges)
   ???
