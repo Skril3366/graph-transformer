@@ -1,7 +1,6 @@
 package graphTransformer.graph
 
 import scala.annotation.tailrec
-import scala.reflect.ClassTag
 
 case class Node[N](value: N) {
   def map[T](f: N => T) = this.copy(f(value))
