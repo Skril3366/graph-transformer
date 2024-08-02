@@ -13,6 +13,7 @@ lazy val graphTransformer = (project in file("."))
     semanticdbVersion := scalafixSemanticdb.revision,
     scalacOptions ++= Seq(
       "-Wunused:imports",
+      "-deprecation",
       "-Werror",
     ),
     libraryDependencies ++= Seq(
