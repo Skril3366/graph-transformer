@@ -8,15 +8,13 @@ import graphTransformer.graph.DirectedGraph
 import graphTransformer.graph.Node
 import graphTransformer.graph.DirectedEdge
 
-type TData[T] = Data[T]
+trait TData[T] {
+  // Unique identifier for the data type
+  def TypeName: String
+}
 
 trait Transformation[F[_], I <: TData[I], O <: TData[O]] {
   def name: String
-}
-
-trait Data[T](value: T) {
-  // Unique identifier for the data type
-  def TypeName: String
 }
 
 type TransformationGraph = DirectedGraph[Transformation[?, ?, ?], Unit]
