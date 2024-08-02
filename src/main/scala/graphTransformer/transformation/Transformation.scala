@@ -1,12 +1,8 @@
 package graphTransformer.transformation
 
-import zio.Task
-import zio.UIO
-
-import graphTransformer.graph.Graph
+import graphTransformer.graph.DirectedEdge
 import graphTransformer.graph.DirectedGraph
 import graphTransformer.graph.Node
-import graphTransformer.graph.DirectedEdge
 
 abstract case class Transformation[F[_], I, O](input_example: I, output_example: O) {
   def name: String
@@ -24,9 +20,9 @@ def transitionGraph[T <: Transformation[?, ?, ?]](
   val edges = for {
     n1 <- nodes
     n2 <- nodes
-    if n1 != n2
-    // if n1.value.output_example.getClass().isInstance(n2.value.input_example.getClass())
-    if n1.value.output_example == n2.value.input_example
+    c1 = n1.value.output_example.getClass()
+    c2 = n2.value.input_example.getClass()
+    if c2.isInstanceOf[c1.type]
   } yield DirectedEdge(n1, n2, ())
 
   println(edges)

@@ -1,7 +1,7 @@
 package graphTransformer.transformation
 
-import zio.UIO
 import zio.Task
+import zio.UIO
 import zio.ZIO
 
 /// Special case of transfomation for merging multiple inputs into one output.

@@ -1,11 +1,6 @@
 package graphTransformer.transformation
 
-import zio.Task
-import zio.UIO
 
-import graphTransformer.graph.Graph
-import graphTransformer.graph.DirectedGraph
-import graphTransformer.graph.Node
 
 class UserTransformationGraph[F[_], I, O](transitionGraph: TransformationGraph) {
   /// constructs user graph if it is valid according to the transition graph
