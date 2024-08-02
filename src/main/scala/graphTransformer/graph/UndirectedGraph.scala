@@ -1,7 +1,5 @@
 package graphTransformer.graph
 
-import scala.annotation.tailrec
-
 case class UndirectedGraph[N, E](
     nodes: Set[Node[N]],
     edges: Set[UndirectedEdge[N, E]]

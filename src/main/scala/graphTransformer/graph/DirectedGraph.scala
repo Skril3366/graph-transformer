@@ -1,7 +1,6 @@
 package graphTransformer.graph
 
-import scala.annotation.tailrec
-import cats.syntax.option.*
+import cats.syntax.option._
 
 /**
  * This is an implementation of directed graph which may contain multi-edges and self-loops. The graph is immutable and
